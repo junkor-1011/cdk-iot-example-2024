@@ -17,7 +17,7 @@
       "**/node_modules",
       "**/dist",
       "**/cdk.out",
-      "workspace/exec-fleet-provisioning/**"
+      "workspace/iot-device-emulating/**"
     ]
   },
   "javascript": {

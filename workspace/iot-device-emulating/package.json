@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "iot-device-emulating",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "devDependencies": {
+    "@types/node": "20.14.8",
+    "tsx": "^4.15.7",
+    "typescript": "~5.5.2"
+  },
+  "dependencies": {
+    "aws-iot-device-sdk-v2": "^1.19.5"
+  }
+}

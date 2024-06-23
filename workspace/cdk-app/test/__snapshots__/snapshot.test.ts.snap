@@ -1,0 +1,681 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`snapshot test 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "FleetProvisioningexampleExampleClaimIoTPolicy056E13DA": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "iot:Connect",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "iot:Publish",
+                "iot:Receive",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iot:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":topic/$aws/certificates/create/*",
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iot:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":topic/$aws/provisioning-templates/example-fleet-provisioning-template/provision/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "iot:Subscribe",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iot:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":topicfilter/$aws/certificates/create/*",
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iot:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":topicfilter/$aws/provisioning-templates/example-fleet-provisioning-template/provision/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "IoT-Policy-for-Claim",
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+      },
+      "Type": "AWS::IoT::Policy",
+    },
+    "FleetProvisioningexampleRoleFleetProvisioningHook30E765CB": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+        "RoleName": "Role-FleetProvisioning-Hook",
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "FleetProvisioningexamplepreprovisioninghook830D1322": {
+      "DependsOn": [
+        "FleetProvisioningexamplepreprovisioninghookServiceRoleDefaultPolicyC07DA285",
+        "FleetProvisioningexamplepreprovisioninghookServiceRole7D9F8C69",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "HASH-REPLACED.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "POWERTOOLS_LOG_LEVEL": "DEBUG",
+            "POWERTOOLS_SERVICE_NAME": "iot-FP-pre-provisioning-hook-example",
+          },
+        },
+        "FunctionName": "LambdaFunction-pre-provisioning-hook",
+        "Handler": "index.handler",
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "FleetProvisioningexamplepreprovisioninghookServiceRole7D9F8C69",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs20.x",
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "FleetProvisioningexamplepreprovisioninghookInvokeX1kgdpeq4A1b3T4Qgx5teuCJ9kkxQXuTuwWc9FHExDED51858B1": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "FleetProvisioningexamplepreprovisioninghook830D1322",
+            "Arn",
+          ],
+        },
+        "Principal": "iot.amazonaws.com",
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "FleetProvisioningexamplepreprovisioninghookServiceRole7D9F8C69": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "FleetProvisioningexamplepreprovisioninghookServiceRoleDefaultPolicyC07DA285": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "FleetProvisioningexamplepreprovisioninghookServiceRoleDefaultPolicyC07DA285",
+        "Roles": [
+          {
+            "Ref": "FleetProvisioningexamplepreprovisioninghookServiceRole7D9F8C69",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "FleetProvisioningexampleprovisioningtemplate763A2EBC": {
+      "DependsOn": [
+        "FleetProvisioningexamplepreprovisioninghookInvokeX1kgdpeq4A1b3T4Qgx5teuCJ9kkxQXuTuwWc9FHExDED51858B1",
+        "FleetProvisioningexamplepreprovisioninghook830D1322",
+        "FleetProvisioningexamplepreprovisioninghookServiceRoleDefaultPolicyC07DA285",
+        "FleetProvisioningexamplepreprovisioninghookServiceRole7D9F8C69",
+      ],
+      "Properties": {
+        "Enabled": true,
+        "PreProvisioningHook": {
+          "PayloadVersion": "2020-04-01",
+          "TargetArn": {
+            "Fn::GetAtt": [
+              "FleetProvisioningexamplepreprovisioninghook830D1322",
+              "Arn",
+            ],
+          },
+        },
+        "ProvisioningRoleArn": {
+          "Fn::GetAtt": [
+            "FleetProvisioningexampleroleFleetProvisioning5803DA71",
+            "Arn",
+          ],
+        },
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+        "TemplateBody": {
+          "Fn::Join": [
+            "",
+            [
+              "{"Parameters":{"SerialNumber":{"Type":"String"},"CreateDateTime":{"Type":"String"}},"Resources":{"thing":{"Type":"AWS::IoT::Thing","Properties":{"AttributePayload":{"SerialNumber":{"Ref":"SerialNumber"},"CreateDateTime":{"Ref":"CreateDateTime"}},"ThingName":{"Fn::Join":["_",["FPTest",{"Ref":"SerialNumber"}]]}},"OverrideSettings":{"AttributePayload":"MERGE"}},"certificate":{"Type":"AWS::IoT::Certificate","Properties":{"CertificateId":{"Ref":"AWS::IoT::Certificate::Id"},"Status":"Active"}},"policy":{"Type":"AWS::IoT::Policy","Properties":{"PolicyDocument":{"Statement":[{"Action":"iot:AssumeRoleWithCertificate","Effect":"Allow","Resource":"",
+              {
+                "Fn::GetAtt": [
+                  "IoTADCexamplerolealiasAA180888",
+                  "RoleAliasArn",
+                ],
+              },
+              ""},{"Action":"iot:Connect","Condition":{"Bool":{"iot:Connection.Thing.IsAttached":["true"]}},"Effect":"Allow","Resource":"arn:aws:iot:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":client/\${iot:Connection.Thing.ThingName}"},{"Action":"iot:Subscribe","Effect":"Allow","Resource":"arn:aws:iot:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":topicfilter/$aws/things/\${iot:Connection.Thing.ThingName}/*"},{"Action":["iot:Publish","iot:Receive"],"Effect":"Allow","Resource":"arn:aws:iot:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":topic/$aws/things/\${iot:Connection.Thing.ThingName}/*"},{"Action":["iot:DescribeJobExecution","iot:GetPendingJobExecutions","iot:GetThingShadow","iot:StartNextPendingJobExecution","iot:UpdateJobExecution","iot:UpdateThingShadow"],"Effect":"Allow","Resource":"arn:aws:iot:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":topic/$aws/things/\${iot:Connection.Thing.ThingName}"}],"Version":"2012-10-17"}}}},"DeviceConfiguration":{"DeviceCreateDate":{"Ref":"CreateDateTime"}}}",
+            ],
+          ],
+        },
+        "TemplateName": "example-fleet-provisioning-template",
+      },
+      "Type": "AWS::IoT::ProvisioningTemplate",
+    },
+    "FleetProvisioningexampleroleFleetProvisioning5803DA71": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "iot.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSIoTThingsRegistration",
+              ],
+            ],
+          },
+        ],
+        "RoleName": "Role-for-FleetProvisioning",
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "IoTADCexampleExampleBucketAB47C09E": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "BucketName": {
+          "Fn::Join": [
+            "",
+            [
+              "iot-adc-example-bucket-",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              "-",
+              {
+                "Ref": "AWS::Region",
+              },
+              "-local-test",
+            ],
+          ],
+        },
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "IoTADCexampleExampleDeviceIoTPolicy46714660": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "iot:AssumeRoleWithCertificate",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "IoTADCexamplerolealiasAA180888",
+                  "RoleAliasArn",
+                ],
+              },
+            },
+            {
+              "Action": "iot:Connect",
+              "Condition": {
+                "Bool": {
+                  "iot:Connection.Thing.IsAttached": [
+                    "true",
+                  ],
+                },
+              },
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:iot:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":client/\${iot:Connection.Thing.ThingName}",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "iot:Subscribe",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:iot:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":topicfilter/$aws/things/\${iot:Connection.Thing.ThingName}/*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "iot:Publish",
+                "iot:Receive",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:iot:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":topic/$aws/things/\${iot:Connection.Thing.ThingName}/*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "iot:DescribeJobExecution",
+                "iot:GetPendingJobExecutions",
+                "iot:GetThingShadow",
+                "iot:StartNextPendingJobExecution",
+                "iot:UpdateJobExecution",
+                "iot:UpdateThingShadow",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:iot:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":topic/$aws/things/\${iot:Connection.Thing.ThingName}",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "IoT-Policy-Device-using-ADC",
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+      },
+      "Type": "AWS::IoT::Policy",
+    },
+    "IoTADCexampleRoleforADC7352F026": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "credentials.iot.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "RoleName": "Role-for-ADC",
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "IoTADCexampleexamplepolicys3download968F3238": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "IoTADCexampleExampleBucketAB47C09E",
+                        "Arn",
+                      ],
+                    },
+                    "/*/download/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "example-policy-s3-download",
+        "Roles": [
+          {
+            "Ref": "IoTADCexampleRoleforADC7352F026",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "IoTADCexampleexamplepolicys3upload223AB16A": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:PutObject",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "IoTADCexampleExampleBucketAB47C09E",
+                        "Arn",
+                      ],
+                    },
+                    "/*/upload/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "example-policy-s3-upload",
+        "Roles": [
+          {
+            "Ref": "IoTADCexampleRoleforADC7352F026",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "IoTADCexamplerolealiasAA180888": {
+      "Properties": {
+        "RoleAlias": "Example-RoleAlias",
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "IoTADCexampleRoleforADC7352F026",
+            "Arn",
+          ],
+        },
+        "Tags": [
+          {
+            "Key": "STAGE",
+            "Value": "local-test",
+          },
+        ],
+      },
+      "Type": "AWS::IoT::RoleAlias",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

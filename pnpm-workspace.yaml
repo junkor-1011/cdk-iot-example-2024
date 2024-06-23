@@ -1,0 +1,6 @@
+packages:
+  - 'workspace/*'
+  - 'packages/*'
+  - 'components/**'
+  - '!**/test/**'
+  - '!**/cdk.out/**'
